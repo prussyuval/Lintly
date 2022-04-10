@@ -196,6 +196,18 @@ class GitHubBackend(BaseGitBackend):
                     })
 
         client = GitHubAPIClient(token=self.token)
+        
+        if not comments:
+            url = '/repos/{owner}/{repo_name}/pulls/{pr_number}/reviews'.format(
+                owner=self.project.owner_login,
+                repo_name=self.project.name,
+                pr_number=pr
+            )
+            data = {
+                'body': build_pr_review_body(all_violations),
+                'event': self._get_event(pr_review_action),
+            }
+            client.post(url, data, headers={'Accept': GITHUB_API_PR_REVIEW_HEADER})
 
         # Pull requests API has a limit of 50 comments per request,
         # if we have more comments than this we will need to split
