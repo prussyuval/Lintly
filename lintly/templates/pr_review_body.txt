@@ -1,10 +1,18 @@
-{% if violations|length %}
+{% if diff_violations|length %}
 
 [Lintly](https://github.com/grantmcconnaughey/Lintly) has detected code quality issues in this pull request.
 
 {% else %}
 
+{% if all_violations|length %}
+
+[Lintly](https://github.com/grantmcconnaughey/Lintly) has detected code quality issues in this pull request, but they are all in lines that are not part of this pull request.
+
+{% else %}
+
 No linting violations have been found in this PR.
+
+{% endif %}
 
 {% endif %}
 

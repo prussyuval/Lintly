@@ -40,6 +40,8 @@ def build_check_line_comment(violation):
     return template.render(violation=violation)
 
 
-def build_pr_review_body(violations):
+def build_pr_review_body(all_violations, diff_violations):
     template = env.get_template('pr_review_body.txt')
-    return template.render(violations=violations, LINTLY_IDENTIFIER=LINTLY_IDENTIFIER)
+    return template.render(
+        all_violations=all_violations, diff_violations=diff_violations, LINTLY_IDENTIFIER=LINTLY_IDENTIFIER
+    )

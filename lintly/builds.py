@@ -164,6 +164,7 @@ class LintlyBuild(object):
                 self.config.pr,
                 patch,
                 self._diff_violations,
+                self._all_violations,
                 pr_review_action
             )
             post_pr_comment = False

@@ -180,10 +180,10 @@ class GitHubBackend(BaseGitBackend):
         elif review_action == ACTION_REVIEW_APPROVE:
             return 'APPROVE'
 
-    def create_pull_request_review(self, pr, patch, all_violations, pr_review_action):
+    def create_pull_request_review(self, pr, patch, diff_violations, all_violations, pr_review_action):
         comments = []
-        for file_path in all_violations:
-            violations = all_violations[file_path]
+        for file_path in diff_violations:
+            violations = diff_violations[file_path]
 
             # https://developer.github.com/v3/pulls/comments/#input
             for violation in violations:
@@ -204,7 +204,7 @@ class GitHubBackend(BaseGitBackend):
                 pr_number=pr
             )
             data = {
-                'body': build_pr_review_body(all_violations),
+                'body': build_pr_review_body(all_violations, diff_violations),
                 'event': self._get_event(pr_review_action),
             }
             client.post(url, data, headers={'Accept': GITHUB_API_PR_REVIEW_HEADER})
@@ -221,7 +221,7 @@ class GitHubBackend(BaseGitBackend):
             # there are no pending comments to add then we send the request
             if len(comments_batch) == GITHUB_PULL_REQUEST_COMMENT_LIMIT or not comments:
                 data = {
-                    'body': build_pr_review_body(all_violations),
+                    'body': build_pr_review_body(all_violations, diff_violations),
                     'event': self._get_event(pr_review_action),
                     'comments': comments_batch,
                 }
